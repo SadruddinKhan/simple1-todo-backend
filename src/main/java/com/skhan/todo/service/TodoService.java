@@ -7,8 +7,6 @@ import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicLong;
@@ -23,10 +21,38 @@ public class TodoService {
 
     @PostConstruct
     public void init() {
-        // Initialize with default sample todos
-        createTodo(new TodoRequest("Learn Spring Boot", "Understand Spring Boot fundamentals and dependency injection", true));
-        createTodo(new TodoRequest("Build Todo REST API", "Implement full CRUD operations using in-memory list storage", false));
-        createTodo(new TodoRequest("Test API Endpoints", "Verify GET, POST, PUT, PATCH, and DELETE endpoints with curl/Postman", false));
+        loadDefaultData();
+    }
+
+    /**
+     * Seeds initial dummy todos so the application starts with pre-populated data.
+     */
+    public void loadDefaultData() {
+        createTodo(new TodoRequest(
+                "Learn Spring Boot Fundamentals",
+                "Understand Spring Boot architecture, auto-configuration, and dependency injection",
+                true
+        ));
+        createTodo(new TodoRequest(
+                "Build Todo REST API",
+                "Implement full CRUD operations using in-memory List in service layer without database",
+                true
+        ));
+        createTodo(new TodoRequest(
+                "Setup CI/CD Pipeline",
+                "Configure automated GitHub Actions workflow for building, testing, and packaging",
+                false
+        ));
+        createTodo(new TodoRequest(
+                "Dockerize Backend Application",
+                "Create a multi-stage Dockerfile and test running container on port 8080",
+                false
+        ));
+        createTodo(new TodoRequest(
+                "Integrate Frontend Client",
+                "Connect React or Angular frontend to backend REST endpoints and test CORS",
+                false
+        ));
     }
 
     public List<Todo> getAllTodos(Boolean completed, String search) {
@@ -58,7 +84,7 @@ public class TodoService {
 
         long newId = idCounter.incrementAndGet();
         boolean isCompleted = request.getCompleted() != null && request.getCompleted();
-        
+
         Todo newTodo = new Todo(
                 newId,
                 request.getTitle().trim(),
