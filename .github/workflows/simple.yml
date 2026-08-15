@@ -16,3 +16,8 @@ jobs:
 
             - name: step2
               run: echo "Hello World 2 from $APP_NAME in $ENVIRONMENT"
+
+            - name: step3
+              run: |
+                echo "Name of the dockerhub user name ${{ vars.DOCKERHUB_USERNAME}}"
+                echo "Name of the ec2 username ${{ vars.EC2_USERNAME}}"
