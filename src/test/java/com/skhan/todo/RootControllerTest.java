@@ -28,7 +28,8 @@ class RootControllerTest {
                 .andExpect(jsonPath("$.message", containsString("Todo Backend API is running successfully")))
                 .andExpect(jsonPath("$.version", is("1.0.0")))
                 .andExpect(jsonPath("$.timestamp", notNullValue()))
-                .andExpect(jsonPath("$.endpoints.getAllTodos", is("GET /api/todos")));
+                .andExpect(jsonPath("$.endpoints.getAllTodos", is("GET /api/todos")))
+                .andExpect(jsonPath("$.endpoints.searchTodos", is("GET /api/todos/search?query={keyword}")));
     }
 
     @Test

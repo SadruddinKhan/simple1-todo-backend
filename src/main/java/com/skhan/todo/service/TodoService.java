@@ -70,6 +70,17 @@ public class TodoService {
                 .collect(Collectors.toList());
     }
 
+    public List<Todo> searchTodos(String query) {
+        if (query == null || query.trim().isEmpty()) {
+            return new CopyOnWriteArrayList<>(todoList);
+        }
+        String term = query.trim().toLowerCase();
+        return todoList.stream()
+                .filter(todo -> (todo.getTitle() != null && todo.getTitle().toLowerCase().contains(term))
+                        || (todo.getDescription() != null && todo.getDescription().toLowerCase().contains(term)))
+                .collect(Collectors.toList());
+    }
+
     public Todo getTodoById(Long id) {
         return todoList.stream()
                 .filter(todo -> todo.getId().equals(id))

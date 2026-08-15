@@ -18,6 +18,7 @@ public class RootController {
         Map<String, String> endpoints = new LinkedHashMap<>();
         endpoints.put("status", "GET /");
         endpoints.put("getAllTodos", "GET /api/todos");
+        endpoints.put("searchTodos", "GET /api/todos/search?query={keyword}");
         endpoints.put("getTodoById", "GET /api/todos/{id}");
         endpoints.put("getTodoStats", "GET /api/todos/stats");
         endpoints.put("createTodo", "POST /api/todos");

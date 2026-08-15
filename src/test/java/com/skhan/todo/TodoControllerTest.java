@@ -63,6 +63,23 @@ class TodoControllerTest {
     }
 
     @Test
+    void shouldSearchTodosViaDedicatedSearchEndpoint() throws Exception {
+        mockMvc.perform(get("/api/todos/search").param("query", "Task 2"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].title", is("Task 2")));
+
+        mockMvc.perform(get("/api/todos/search").param("q", "Description 1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].title", is("Task 1")));
+
+        mockMvc.perform(get("/api/todos/search"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)));
+    }
+
+    @Test
     void shouldGetTodoById() throws Exception {
         Long firstId = todoService.getAllTodos(null, null).get(0).getId();
 

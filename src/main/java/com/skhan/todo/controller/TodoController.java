@@ -34,6 +34,19 @@ public class TodoController {
     }
 
     /**
+     * Search todos by title or description keyword.
+     * Example: GET /api/todos/search?query=spring or GET /api/todos/search?q=spring
+     */
+    @GetMapping("/search")
+    public ResponseEntity<List<Todo>> searchTodos(
+            @RequestParam(required = false) String query,
+            @RequestParam(required = false) String q) {
+        String searchTerm = query != null ? query : q;
+        List<Todo> todos = todoService.searchTodos(searchTerm);
+        return ResponseEntity.ok(todos);
+    }
+
+    /**
      * Get summary counts of total, completed, and pending todos.
      * Example: GET /api/todos/stats
      */

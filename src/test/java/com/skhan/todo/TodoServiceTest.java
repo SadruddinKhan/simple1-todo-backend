@@ -56,6 +56,30 @@ class TodoServiceTest {
     }
 
     @Test
+    void testSearchTodos() {
+        todoService.createTodo(new TodoRequest("Learn Spring Boot", "Understand dependency injection", false));
+        todoService.createTodo(new TodoRequest("Write Dockerfile", "Containerize the Spring Boot app", true));
+        todoService.createTodo(new TodoRequest("Deploy to AWS", "Setup EC2 instance", false));
+
+        // Search matching title
+        List<Todo> results1 = todoService.searchTodos("spring");
+        assertEquals(2, results1.size());
+
+        // Search matching description
+        List<Todo> results2 = todoService.searchTodos("containerize");
+        assertEquals(1, results2.size());
+        assertEquals("Write Dockerfile", results2.get(0).getTitle());
+
+        // Search with no matching term
+        List<Todo> results3 = todoService.searchTodos("Kubernetes");
+        assertEquals(0, results3.size());
+
+        // Null or blank query returns all todos
+        assertEquals(3, todoService.searchTodos(null).size());
+        assertEquals(3, todoService.searchTodos("   ").size());
+    }
+
+    @Test
     void testUpdateTodo() {
         Todo created = todoService.createTodo(new TodoRequest("Original", "Original Desc", false));
         Todo updated = todoService.updateTodo(created.getId(), new TodoRequest("Updated", "Updated Desc", true));
