@@ -13,10 +13,11 @@ import java.util.Map;
 @CrossOrigin(origins = "*")
 public class RootController {
 
-    @GetMapping({"/", "/api", "/health"})
+    @GetMapping({"/api", "/health"})
     public ResponseEntity<ApiStatusResponse> getApiStatus() {
         Map<String, String> endpoints = new LinkedHashMap<>();
-        endpoints.put("status", "GET /");
+        endpoints.put("ui", "GET /");
+        endpoints.put("status", "GET /api");
         endpoints.put("getAllTodos", "GET /api/todos");
         endpoints.put("searchTodos", "GET /api/todos/search?query={keyword}");
         endpoints.put("getTodoById", "GET /api/todos/{id}");

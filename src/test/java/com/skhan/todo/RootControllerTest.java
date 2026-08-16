@@ -21,13 +21,14 @@ class RootControllerTest {
     }
 
     @Test
-    void shouldReturnOkStatusOnRoot() throws Exception {
-        mockMvc.perform(get("/"))
+    void shouldReturnOkStatusOnApi() throws Exception {
+        mockMvc.perform(get("/api"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status", is("OK")))
                 .andExpect(jsonPath("$.message", containsString("Todo Backend API is running successfully")))
                 .andExpect(jsonPath("$.version", is("1.0.0")))
                 .andExpect(jsonPath("$.timestamp", notNullValue()))
+                .andExpect(jsonPath("$.endpoints.ui", is("GET /")))
                 .andExpect(jsonPath("$.endpoints.getAllTodos", is("GET /api/todos")))
                 .andExpect(jsonPath("$.endpoints.searchTodos", is("GET /api/todos/search?query={keyword}")));
     }
