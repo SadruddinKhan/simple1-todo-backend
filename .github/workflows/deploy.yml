@@ -45,6 +45,7 @@ jobs:
       - name: Build docker image
         run: |
            docker build \
+            --platform linux/arm64 \
            -t ${{ vars.DOCKERHUB_USERNAME}}/${{env.APP_NAME}}:${{env.IMAGE_TAG}} \
            .
            echo "image build success"
