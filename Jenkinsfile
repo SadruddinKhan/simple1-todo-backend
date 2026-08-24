@@ -13,7 +13,7 @@ pipeline {
         stage("Welcome stage"){
             step{
                 echo 'Hello, Pipeline for "${PROJECT_NAME}" started...'
-                echo 'Build number is "${BUILD_NUMBER}"'
+                echo 'Build Number is "${BUILD_NUMBER}"'
             }
 
         }
