@@ -10,6 +10,13 @@ pipeline {
 
     stages{
 
+        stage("Checkout"){
+           steps{
+              echo "checkout successful"
+              echo "Testing from github..."
+           }
+        }
+
         stage("Welcome stage"){
             steps{
                 echo 'Hello, Pipeline for "${PROJECT_NAME}" started...'
