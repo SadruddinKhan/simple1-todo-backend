@@ -17,7 +17,7 @@ pipeline {
            }
         }
 
-    stages("Test"){
+    stage("Test"){
        steps{
           sh '''
           chmod +x ./mvnw
@@ -26,7 +26,7 @@ pipeline {
        }
     } 
 
-     stages("Build"){
+     stage("Build"){
        steps{
           sh '''
            ./mvnw clean package -DskipTests
@@ -35,7 +35,7 @@ pipeline {
        }
     }
 
-    stages("Docker Build"){
+    stage("Docker Build"){
        steps{
           sh '''
            
