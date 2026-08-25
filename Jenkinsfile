@@ -17,20 +17,39 @@ pipeline {
            }
         }
 
-        stage("Welcome stage"){
-            steps{
-                sh '''
-                echo "Hello, Pipeline for "${PROJECT_NAME}" started..."
+    stages("Test"){
+       steps{
+          sh '''
+          chmod +x ./mvnw
+          ./mvnw test
+          '''  
+       }
+    } 
 
-                '''
+     stages("Build"){
+       steps{
+          sh '''
+           ./mvnw clean package -DskipTests
+          
+          '''  
+       }
+    }
 
-                sh '''
-                echo "Build Number is "${BUILD_NUMBER}""
+    stages("Docker Build"){
+       steps{
+          sh '''
+           
+           docker image prune -af
 
-                '''
-            }
+           docker build \
+            --platform linux/arm64 \
+           -t ${DOCKER_IMAGE}:${DOCKER_TAG} .
 
-        }
+           docker images
+          
+          '''  
+       }
+    }       
     }
 
 }
