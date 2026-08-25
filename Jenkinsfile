@@ -39,17 +39,44 @@ pipeline {
        steps{
           sh '''
            
-           docker image prune -af
 
            docker build \
             --platform linux/arm64 \
            -t ${DOCKER_IMAGE}:${DOCKER_TAG} .
 
-           docker images
           
           '''  
        }
-    }       
+    }
+
+    stage("Docker Push"){
+       steps{
+
+          withCrendentials([
+              usernamePassword(
+                  credentialsId: 'dockerhub-credentials',
+                  usernameVariable: 'DOCKERHUB_USERNAME',
+                  passwordVariable: 'DOCKERHUB_PASSWORD'
+              )
+          ])
+          {
+
+           sh '''
+           
+              echo "$DOCKERHUB_USERNAME | docker login -u $DOCKERHUB_PASSWORD --password-stdin"
+          
+              docker push ${DOCKER_IMAGE}:${DOCKER_TAG}
+
+              docker image prune -af
+
+              docker images 
+             
+            '''  
+
+          }
+          
+       }
+    }              
     }
 
 }
