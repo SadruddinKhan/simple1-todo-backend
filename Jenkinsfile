@@ -5,6 +5,10 @@ pipeline {
         PROJECT_NAME="todo-backend"
         DOCKER_IMAGE="SadruddinKhan/simple1-todo-backend"
         DOCKER_TAG="${BUILD_NUMBER}"
+        EC2_HOST="13.203.227.65"
+        EC2_USER="ubuntu"
+        DOCKER_CONTAINER="todo-backend"
+        AP_PORT="8082:8080"
 
     }
 
@@ -52,7 +56,7 @@ pipeline {
     stage("Docker Push"){
        steps{
 
-          withCrendentials([
+          withCredentials([
               usernamePassword(
                   credentialsId: 'dockerhub-credentials',
                   usernameVariable: 'DOCKERHUB_USERNAME',
@@ -78,6 +82,34 @@ pipeline {
           }
           
        }
+    }
+    stage("EC2 Deploy"){
+      steps{
+
+         sshagent([
+            'ec2-instance-key'
+         ]){
+           
+           //code goes here
+           sh '''
+            
+            ssh $EC2_USER@EC2_HOST "
+            docker rm -f $DOCKER_CONTAINER || true
+
+            docker pull $DOCKER_IMAGE:$DOCKER_TAG
+
+            docker run -d \
+                --name $DOCKER_CONTAINER \
+                -p $APP_PORT \
+                --restart unless-stopped \
+                $DOCKER_IMAGE:$DOCKER_TAG
+
+                docker image prune -f
+                "
+           '''
+
+         }
+      }
     }              
     }
 
