@@ -67,6 +67,10 @@ pipeline {
 
            sh '''
            
+              mkdir -p ~/.ssh
+              chmod 700 ~/.ssh
+              ssh-keyscan -H "$EC2_HOST" >> ~/.ssh/known_hosts
+
               echo "$DOCKERHUB_PASSWORD" | docker login \
               -u $DOCKERHUB_USERNAME \
               --password-stdin
