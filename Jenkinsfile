@@ -90,8 +90,9 @@ pipeline {
             'ec2-instance-key'
          ]){
            
-           //code goes here
            
+           //code goes here
+
            sh '''
             
            mkdir -p ~/.ssh
