@@ -66,13 +66,9 @@ pipeline {
           {
 
            sh '''
-           
-              mkdir -p ~/.ssh
-              chmod 700 ~/.ssh
-              ssh-keyscan -H "$EC2_HOST" >> ~/.ssh/known_hosts
 
               echo "$DOCKERHUB_PASSWORD" | docker login \
-              -u $DOCKERHUB_USERNAME \
+              -u "$DOCKERHUB_USERNAME" \
               --password-stdin
           
               docker push ${DOCKER_IMAGE}:${DOCKER_TAG}
@@ -97,6 +93,10 @@ pipeline {
            //code goes here
            sh '''
             
+           mkdir -p ~/.ssh
+              chmod 700 ~/.ssh
+              ssh-keyscan -H "$EC2_HOST" >> ~/.ssh/known_hosts
+
             ssh $EC2_USER@EC2_HOST "
             docker rm -f $DOCKER_CONTAINER || true
 
