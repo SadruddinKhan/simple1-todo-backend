@@ -99,7 +99,7 @@ pipeline {
               chmod 700 ~/.ssh
               ssh-keyscan -H "$EC2_HOST" >> ~/.ssh/known_hosts
 
-            ssh $EC2_USER@EC2_HOST "
+            ssh $EC2_USER@$EC2_HOST "
             docker rm -f $DOCKER_CONTAINER || true
 
             docker pull $DOCKER_IMAGE:$DOCKER_TAG
