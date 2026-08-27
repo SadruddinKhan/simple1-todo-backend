@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - TaskFlow</title>
+    <meta name="description" content="Learn about TaskFlow, a modern cloud-native Todo application built with Spring Boot, Thymeleaf, and Tailwind CSS.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS v3 Play CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'monospace']
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            200: '#c7d2fe',
+                            300: '#a5b4fc',
+                            400: '#818cf8',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            800: '#3730a3',
+                            900: '#312e81'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Custom Styles -->
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 min-h-screen font-sans transition-colors duration-200 antialiased selection:bg-brand-500 selection:text-white">
+
+    <div class="min-h-screen flex flex-col">
+        <!-- Top Navigation Bar -->
+        <header class="sticky top-0 z-30 backdrop-blur-md bg-white/80 dark:bg-slate-900/80 border-b border-slate-200/80 dark:border-slate-800/80">
+            <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+                <div class="flex items-center gap-3 sm:gap-6">
+                    <a th:href="@{/}" href="/" class="flex items-center gap-3 group">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-400 flex items-center justify-center text-white shadow-md shadow-brand-500/20 group-hover:scale-105 transition-transform">
+                            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <h1 class="text-lg font-bold tracking-tight text-slate-900 dark:text-white">TaskFlow</h1>
+                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-brand-50 text-brand-700 dark:bg-brand-950/70 dark:text-brand-300 border border-brand-200 dark:border-brand-800/50">
+                                    v1.0
+                                </span>
+                            </div>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 hidden sm:block">Spring Boot • Thymeleaf • Tailwind</p>
+                        </div>
+                    </a>
+
+                    <!-- Navigation Links -->
+                    <nav class="flex items-center gap-1" aria-label="Main Navigation">
+                        <a th:href="@{/}" href="/" class="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+                            Tasks
+                        </a>
+                        <a th:href="@{/about}" href="/about" class="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold text-brand-700 dark:text-brand-300 bg-brand-50 dark:bg-brand-950/70 border border-brand-200 dark:border-brand-800/60 transition">
+                            About
+                        </a>
+                    </nav>
+                </div>
+
+                <div class="flex items-center gap-2 sm:gap-3">
+                    <!-- API Status Badge -->
+                    <a th:href="@{/api}" href="/api" target="_blank" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                        <span>API Status</span>
+                    </a>
+
+                    <!-- Theme Toggle -->
+                    <button id="themeToggleBtn" type="button" aria-label="Toggle Theme" class="p-2 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white transition">
+                        <svg id="sunIcon" class="w-5 h-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+                        </svg>
+                        <svg id="moonIcon" class="w-5 h-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
+                        </svg>
+                    </button>
+
+                    <!-- Primary Go To Tasks Button -->
+                    <a th:href="@{/}" href="/" class="inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold text-white bg-brand-600 hover:bg-brand-700 active:scale-95 shadow-md shadow-brand-500/25 transition-all">
+                        <span>Go to Tasks</span>
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-12">
+
+            <!-- Hero Section -->
+            <section class="relative overflow-hidden rounded-3xl bg-gradient-to-b from-brand-50/70 via-white to-white dark:from-brand-950/30 dark:via-slate-900 dark:to-slate-900 border border-slate-200/80 dark:border-slate-800/80 p-6 sm:p-10 lg:p-12 shadow-sm text-center">
+                <!-- Background decorative glow -->
+                <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-96 h-96 bg-brand-400/20 dark:bg-brand-600/10 rounded-full blur-3xl pointer-events-none"></div>
+
+                <div class="relative z-10 max-w-3xl mx-auto space-y-5">
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-brand-100/80 text-brand-800 dark:bg-brand-900/60 dark:text-brand-300 border border-brand-200/80 dark:border-brand-800/60 shadow-sm">
+                        <span class="w-2 h-2 rounded-full bg-brand-600 dark:bg-brand-400 animate-ping"></span>
+                        <span>Micro-DevOps Reference Application</span>
+                    </div>
+
+                    <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight">
+                        Modern Productivity Built for <span class="bg-gradient-to-r from-brand-600 via-indigo-500 to-purple-600 bg-clip-text text-transparent">Speed &amp; Reliability</span>
+                    </h1>
+
+                    <p class="text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed">
+                        TaskFlow is a production-grade full-stack task management application engineered with Spring Boot 4, Thymeleaf server-side rendering, and responsive Tailwind UI styling. Designed for seamless CI/CD automation and containerized environments.
+                    </p>
+
+                    <div class="pt-2 flex flex-wrap items-center justify-center gap-3">
+                        <a th:href="@{/}" href="/" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white bg-brand-600 hover:bg-brand-700 shadow-md shadow-brand-500/25 active:scale-95 transition">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span>Open Task Dashboard</span>
+                        </a>
+
+                        <a th:href="@{/api}" href="/api" target="_blank" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 shadow-sm transition">
+                            <svg class="w-4 h-4 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" />
+                            </svg>
+                            <span>Explore REST API</span>
+                        </a>
+
+                        <a th:href="@{/health}" href="/health" target="_blank" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                            <span>Health Check</span>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Real-time Live Stats Overview -->
+            <section class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+                <div class="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-sm">
+                    <div class="flex items-center justify-between text-slate-500 dark:text-slate-400">
+                        <span class="text-xs font-semibold uppercase tracking-wider">Total Tasks</span>
+                        <div class="p-1.5 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 text-brand-600 dark:text-brand-400">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="mt-2 flex items-baseline gap-2">
+                        <span th:text="${totalCount}" class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">5</span>
+                        <span class="text-xs text-slate-500 dark:text-slate-400">items</span>
+                    </div>
+                </div>
+
+                <div class="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-sm">
+                    <div class="flex items-center justify-between text-slate-500 dark:text-slate-400">
+                        <span class="text-xs font-semibold uppercase tracking-wider">Completed</span>
+                        <div class="p-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="mt-2 flex items-baseline gap-2">
+                        <span th:text="${completedCount}" class="text-2xl sm:text-3xl font-extrabold text-emerald-600 dark:text-emerald-400">2</span>
+                        <span class="text-xs text-emerald-600/70 dark:text-emerald-400/70">done</span>
+                    </div>
+                </div>
+
+                <div class="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-sm">
+                    <div class="flex items-center justify-between text-slate-500 dark:text-slate-400">
+                        <span class="text-xs font-semibold uppercase tracking-wider">Pending</span>
+                        <div class="p-1.5 rounded-lg bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="mt-2 flex items-baseline gap-2">
+                        <span th:text="${pendingCount}" class="text-2xl sm:text-3xl font-extrabold text-amber-600 dark:text-amber-400">3</span>
+                        <span class="text-xs text-amber-600/70 dark:text-amber-400/70">in progress</span>
+                    </div>
+                </div>
+
+                <div class="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-sm">
+                    <div class="flex items-center justify-between text-slate-500 dark:text-slate-400">
+                        <span class="text-xs font-semibold uppercase tracking-wider">System Status</span>
+                        <span class="inline-flex items-center gap-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                            Healthy
+                        </span>
+                    </div>
+                    <div class="mt-2 flex items-baseline gap-2">
+                        <span class="text-2xl sm:text-3xl font-extrabold text-brand-600 dark:text-brand-400">100%</span>
+                        <span class="text-xs text-slate-500 dark:text-slate-400">uptime</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Key Features & Architecture Highlights -->
+            <section class="space-y-6">
+                <div class="text-center max-w-2xl mx-auto space-y-2">
+                    <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Core Capabilities</h2>
+                    <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">Carefully designed architecture uniting robust backend services with an elegant user interface.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                    <!-- Feature 1 -->
+                    <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200/80 dark:border-slate-800/80 shadow-sm hover:shadow-md hover:border-brand-300 dark:hover:border-brand-700 transition">
+                        <div class="w-10 h-10 rounded-xl bg-brand-50 dark:bg-brand-950/70 text-brand-600 dark:text-brand-400 flex items-center justify-center mb-4">
+                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" />
+                            </svg>
+                        </div>
+                        <h3 class="text-base font-bold text-slate-900 dark:text-white">RESTful Web API</h3>
+                        <p class="mt-2 text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                            Standards-compliant endpoints for task creation, keyword searching, completion toggling, batch deletion, and real-time statistics aggregation.
+                        </p>
+                    </div>
+
+                    <!-- Feature 2 -->
+                    <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200/80 dark:border-slate-800/80 shadow-sm hover:shadow-md hover:border-brand-300 dark:hover:border-brand-700 transition">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-950/70 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mb-4">
+                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-base font-bold text-slate-900 dark:text-white">Hybrid SSR &amp; Reactive UI</h3>
+                        <p class="mt-2 text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                            Instant initial page load powered by Thymeleaf server-side templates with dynamic async JavaScript client operations for a seamless single-page experience.
+                        </p>
+                    </div>
+
+                    <!-- Feature 3 -->
+                    <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200/80 dark:border-slate-800/80 shadow-sm hover:shadow-md hover:border-brand-300 dark:hover:border-brand-700 transition">
+                        <div class="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-indigo-950/70 text-indigo-600 dark:text-indigo-400 flex items-center justify-center mb-4">
+                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 5.625c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125" />
+                            </svg>
+                        </div>
+                        <h3 class="text-base font-bold text-slate-900 dark:text-white">Thread-Safe Memory Store</h3>
+                        <p class="mt-2 text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                            High-concurrency data persistence backed by Java's ConcurrentHashMap and Atomic counters, guaranteeing thread safety with zero external database overhead.
+                        </p>
+                    </div>
+
+                    <!-- Feature 4 -->
+                    <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200/80 dark:border-slate-800/80 shadow-sm hover:shadow-md hover:border-brand-300 dark:hover:border-brand-700 transition">
+                        <div class="w-10 h-10 rounded-xl bg-purple-50 dark:bg-purple-950/70 text-purple-600 dark:text-purple-400 flex items-center justify-center mb-4">
+                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-base font-bold text-slate-900 dark:text-white">Dark &amp; Light Themes</h3>
+                        <p class="mt-2 text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                            Full dark mode adaptation with smooth color transitions, local preference persistence, and modern typography optimized for readability.
+                        </p>
+                    </div>
+
+                    <!-- Feature 5 -->
+                    <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200/80 dark:border-slate-800/80 shadow-sm hover:shadow-md hover:border-brand-300 dark:hover:border-brand-700 transition">
+                        <div class="w-10 h-10 rounded-xl bg-rose-50 dark:bg-rose-950/70 text-rose-600 dark:text-rose-400 flex items-center justify-center mb-4">
+                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-2.18 7.373a6.75 6.75 0 01-8.57-8.57 6.75 6.75 0 018.57-8.57 6.75 6.75 0 018.57 8.57 6.75 6.75 0 01-8.57 8.57z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-base font-bold text-slate-900 dark:text-white">100% Automated Testing</h3>
+                        <p class="mt-2 text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                            Comprehensive unit and MockMvc integration test suite covering web controllers, business logic, and API edge cases to prevent regressions.
+                        </p>
+                    </div>
+
+                    <!-- Feature 6 -->
+                    <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200/80 dark:border-slate-800/80 shadow-sm hover:shadow-md hover:border-brand-300 dark:hover:border-brand-700 transition">
+                        <div class="w-10 h-10 rounded-xl bg-cyan-50 dark:bg-cyan-950/70 text-cyan-600 dark:text-cyan-400 flex items-center justify-center mb-4">
+                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 14.25h13.5m-13.5 0a3 3 0 01-3-3m3 3a3 3 0 100 6h13.5a3 3 0 100-6m-16.5-3a3 3 0 013-3h13.5a3 3 0 013 3m-19.5 0a4.5 4.5 0 01.9-2.7L5.75 5.25a3 3 0 012.4-1.2h7.7a3 3 0 012.4 1.2l2.1 3.3a4.5 4.5 0 01.9 2.7" />
+                            </svg>
+                        </div>
+                        <h3 class="text-base font-bold text-slate-900 dark:text-white">CI/CD &amp; Docker Ready</h3>
+                        <p class="mt-2 text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                            Configured with multi-stage Docker containerization and a declarative Jenkinsfile for automated building, testing, and continuous deployment.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tech Stack & System Specifications -->
+            <section class="space-y-6">
+                <div class="text-center max-w-2xl mx-auto space-y-2">
+                    <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Technology Stack</h2>
+                    <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">Engineered with cutting-edge open-source tools and frameworks.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                    <!-- Backend Stack Card -->
+                    <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200/80 dark:border-slate-800/80 shadow-sm space-y-4">
+                        <div class="flex items-center gap-3">
+                            <div class="p-2.5 rounded-xl bg-orange-50 dark:bg-orange-950/60 text-orange-600 dark:text-orange-400">
+                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 14.25h13.5m-13.5 0a3 3 0 01-3-3m3 3a3 3 0 100 6h13.5a3 3 0 100-6m-16.5-3a3 3 0 013-3h13.5a3 3 0 013 3m-19.5 0a4.5 4.5 0 01.9-2.7L5.75 5.25a3 3 0 012.4-1.2h7.7a3 3 0 012.4 1.2l2.1 3.3a4.5 4.5 0 01.9 2.7" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-base font-bold text-slate-900 dark:text-white">Backend Layer</h3>
+                                <p class="text-xs text-slate-500 dark:text-slate-400">Java &amp; Spring Framework</p>
+                            </div>
+                        </div>
+
+                        <ul class="space-y-2.5 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
+                            <li class="flex items-center justify-between py-1.5 border-b border-slate-100 dark:border-slate-800/80">
+                                <span class="text-slate-500 dark:text-slate-400">Runtime</span>
+                                <span class="font-mono font-medium text-slate-900 dark:text-white" th:text="'Java ' + ${javaVersion}">Java 25</span>
+                            </li>
+                            <li class="flex items-center justify-between py-1.5 border-b border-slate-100 dark:border-slate-800/80">
+                                <span class="text-slate-500 dark:text-slate-400">Framework</span>
+                                <span class="font-mono font-medium text-slate-900 dark:text-white" th:text="'Spring Boot ' + ${springBootVersion}">Spring Boot 4.1.0</span>
+                            </li>
+                            <li class="flex items-center justify-between py-1.5 border-b border-slate-100 dark:border-slate-800/80">
+                                <span class="text-slate-500 dark:text-slate-400">Architecture</span>
+                                <span class="font-medium text-slate-900 dark:text-white">RESTful MVC</span>
+                            </li>
+                            <li class="flex items-center justify-between py-1.5">
+                                <span class="text-slate-500 dark:text-slate-400">Validation</span>
+                                <span class="font-medium text-slate-900 dark:text-white">Jakarta Validation</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Frontend Stack Card -->
+                    <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200/80 dark:border-slate-800/80 shadow-sm space-y-4">
+                        <div class="flex items-center gap-3">
+                            <div class="p-2.5 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400">
+                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-base font-bold text-slate-900 dark:text-white">Frontend Layer</h3>
+                                <p class="text-xs text-slate-500 dark:text-slate-400">Templates &amp; Modern Styling</p>
+                            </div>
+                        </div>
+
+                        <ul class="space-y-2.5 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
+                            <li class="flex items-center justify-between py-1.5 border-b border-slate-100 dark:border-slate-800/80">
+                                <span class="text-slate-500 dark:text-slate-400">Template Engine</span>
+                                <span class="font-mono font-medium text-slate-900 dark:text-white">Thymeleaf 3.x</span>
+                            </li>
+                            <li class="flex items-center justify-between py-1.5 border-b border-slate-100 dark:border-slate-800/80">
+                                <span class="text-slate-500 dark:text-slate-400">Styling System</span>
+                                <span class="font-mono font-medium text-slate-900 dark:text-white">Tailwind CSS v3</span>
+                            </li>
+                            <li class="flex items-center justify-between py-1.5 border-b border-slate-100 dark:border-slate-800/80">
+                                <span class="text-slate-500 dark:text-slate-400">Client Engine</span>
+                                <span class="font-medium text-slate-900 dark:text-white">Vanilla JavaScript (ES6+)</span>
+                            </li>
+                            <li class="flex items-center justify-between py-1.5">
+                                <span class="text-slate-500 dark:text-slate-400">Typography</span>
+                                <span class="font-medium text-slate-900 dark:text-white">Plus Jakarta Sans &amp; Mono</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- DevOps Stack Card -->
+                    <div class="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200/80 dark:border-slate-800/80 shadow-sm space-y-4">
+                        <div class="flex items-center gap-3">
+                            <div class="p-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400">
+                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="text-base font-bold text-slate-900 dark:text-white">DevOps &amp; Quality</h3>
+                                <p class="text-xs text-slate-500 dark:text-slate-400">Automation &amp; CI/CD</p>
+                            </div>
+                        </div>
+
+                        <ul class="space-y-2.5 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
+                            <li class="flex items-center justify-between py-1.5 border-b border-slate-100 dark:border-slate-800/80">
+                                <span class="text-slate-500 dark:text-slate-400">Containerization</span>
+                                <span class="font-mono font-medium text-slate-900 dark:text-white">Docker Multi-Stage</span>
+                            </li>
+                            <li class="flex items-center justify-between py-1.5 border-b border-slate-100 dark:border-slate-800/80">
+                                <span class="text-slate-500 dark:text-slate-400">CI/CD Pipeline</span>
+                                <span class="font-mono font-medium text-slate-900 dark:text-white">Jenkinsfile Automation</span>
+                            </li>
+                            <li class="flex items-center justify-between py-1.5 border-b border-slate-100 dark:border-slate-800/80">
+                                <span class="text-slate-500 dark:text-slate-400">Test Framework</span>
+                                <span class="font-medium text-slate-900 dark:text-white">JUnit 5 &amp; MockMvc</span>
+                            </li>
+                            <li class="flex items-center justify-between py-1.5">
+                                <span class="text-slate-500 dark:text-slate-400">Build Tool</span>
+                                <span class="font-mono font-medium text-slate-900 dark:text-white">Apache Maven Wrapper</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- REST API Reference Directory -->
+            <section class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200/80 dark:border-slate-800/80 shadow-sm space-y-6">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100 dark:border-slate-800">
+                    <div>
+                        <h2 class="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white">REST API Directory</h2>
+                        <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">Explore available backend endpoints ready for programmatic integration.</p>
+                    </div>
+                    <a th:href="@{/api}" href="/api" target="_blank" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-950/70 border border-brand-200 dark:border-brand-800/60 hover:bg-brand-100 transition self-start sm:self-auto">
+                        <span>Open JSON Status</span>
+                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                        </svg>
+                    </a>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+                    <!-- Endpoint 1 -->
+                    <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/60 flex items-center justify-between gap-3">
+                        <div class="flex items-center gap-2.5 min-w-0">
+                            <span class="px-2 py-0.5 rounded text-[11px] font-mono font-bold bg-sky-100 text-sky-700 dark:bg-sky-950 dark:text-sky-300">GET</span>
+                            <span class="font-mono text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-200 truncate">/api/todos</span>
+                        </div>
+                        <span class="text-xs text-slate-500 dark:text-slate-400 shrink-0">List all tasks</span>
+                    </div>
+
+                    <!-- Endpoint 2 -->
+                    <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/60 flex items-center justify-between gap-3">
+                        <div class="flex items-center gap-2.5 min-w-0">
+                            <span class="px-2 py-0.5 rounded text-[11px] font-mono font-bold bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">POST</span>
+                            <span class="font-mono text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-200 truncate">/api/todos</span>
+                        </div>
+                        <span class="text-xs text-slate-500 dark:text-slate-400 shrink-0">Create a task</span>
+                    </div>
+
+                    <!-- Endpoint 3 -->
+                    <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/60 flex items-center justify-between gap-3">
+                        <div class="flex items-center gap-2.5 min-w-0">
+                            <span class="px-2 py-0.5 rounded text-[11px] font-mono font-bold bg-purple-100 text-purple-700 dark:bg-purple-950 dark:text-purple-300">PATCH</span>
+                            <span class="font-mono text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-200 truncate">/api/todos/{id}/toggle</span>
+                        </div>
+                        <span class="text-xs text-slate-500 dark:text-slate-400 shrink-0">Toggle completion</span>
+                    </div>
+
+                    <!-- Endpoint 4 -->
+                    <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/60 flex items-center justify-between gap-3">
+                        <div class="flex items-center gap-2.5 min-w-0">
+                            <span class="px-2 py-0.5 rounded text-[11px] font-mono font-bold bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300">PUT</span>
+                            <span class="font-mono text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-200 truncate">/api/todos/{id}</span>
+                        </div>
+                        <span class="text-xs text-slate-500 dark:text-slate-400 shrink-0">Update full task</span>
+                    </div>
+
+                    <!-- Endpoint 5 -->
+                    <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/60 flex items-center justify-between gap-3">
+                        <div class="flex items-center gap-2.5 min-w-0">
+                            <span class="px-2 py-0.5 rounded text-[11px] font-mono font-bold bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-300">DELETE</span>
+                            <span class="font-mono text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-200 truncate">/api/todos/{id}</span>
+                        </div>
+                        <span class="text-xs text-slate-500 dark:text-slate-400 shrink-0">Delete single task</span>
+                    </div>
+
+                    <!-- Endpoint 6 -->
+                    <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/60 flex items-center justify-between gap-3">
+                        <div class="flex items-center gap-2.5 min-w-0">
+                            <span class="px-2 py-0.5 rounded text-[11px] font-mono font-bold bg-sky-100 text-sky-700 dark:bg-sky-950 dark:text-sky-300">GET</span>
+                            <span class="font-mono text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-200 truncate">/api/todos/stats</span>
+                        </div>
+                        <span class="text-xs text-slate-500 dark:text-slate-400 shrink-0">Aggregate counts</span>
+                    </div>
+
+                    <!-- Endpoint 7 -->
+                    <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/60 flex items-center justify-between gap-3">
+                        <div class="flex items-center gap-2.5 min-w-0">
+                            <span class="px-2 py-0.5 rounded text-[11px] font-mono font-bold bg-sky-100 text-sky-700 dark:bg-sky-950 dark:text-sky-300">GET</span>
+                            <span class="font-mono text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-200 truncate">/health</span>
+                        </div>
+                        <span class="text-xs text-slate-500 dark:text-slate-400 shrink-0">Service liveness</span>
+                    </div>
+
+                    <!-- Endpoint 8 -->
+                    <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/60 flex items-center justify-between gap-3">
+                        <div class="flex items-center gap-2.5 min-w-0">
+                            <span class="px-2 py-0.5 rounded text-[11px] font-mono font-bold bg-sky-100 text-sky-700 dark:bg-sky-950 dark:text-sky-300">GET</span>
+                            <span class="font-mono text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-200 truncate">/api/todos/search</span>
+                        </div>
+                        <span class="text-xs text-slate-500 dark:text-slate-400 shrink-0">Keyword search</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Call to Action Banner -->
+            <section class="relative rounded-3xl overflow-hidden bg-gradient-to-r from-brand-600 via-indigo-600 to-purple-600 p-8 sm:p-12 text-white text-center shadow-xl">
+                <div class="relative z-10 max-w-2xl mx-auto space-y-4">
+                    <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Streamline Your Daily Workflow Today</h2>
+                    <p class="text-xs sm:text-sm text-brand-100 leading-relaxed">
+                        Experience lightning-fast task management with responsive UI, live statistics, and robust Spring Boot architecture.
+                    </p>
+                    <div class="pt-2 flex flex-wrap items-center justify-center gap-3">
+                        <a th:href="@{/}" href="/" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold bg-white text-brand-700 hover:bg-brand-50 shadow-md active:scale-95 transition">
+                            <span>Get Started with Tasks</span>
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="border-t border-slate-200/80 dark:border-slate-800/80 py-6 text-center text-xs text-slate-500 dark:text-slate-400">
+            <div class="max-w-5xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+                <p>TaskFlow &bull; Spring Boot 4 REST API &amp; Thymeleaf SSR</p>
+                <div class="flex items-center flex-wrap justify-center gap-4">
+                    <a th:href="@{/}" href="/" class="hover:text-brand-600 dark:hover:text-brand-400 transition font-medium">Tasks</a>
+                    <a th:href="@{/about}" href="/about" class="hover:text-brand-600 dark:hover:text-brand-400 transition font-medium">About</a>
+                    <a th:href="@{/api}" href="/api" target="_blank" class="hover:text-brand-600 dark:hover:text-brand-400 transition">REST Endpoints</a>
+                    <a th:href="@{/health}" href="/health" target="_blank" class="hover:text-brand-600 dark:hover:text-brand-400 transition">Health Check</a>
+                    <a th:href="@{/api/todos/stats}" href="/api/todos/stats" target="_blank" class="hover:text-brand-600 dark:hover:text-brand-400 transition">Stats JSON</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Plain JavaScript App Client for Theme & Interactivity -->
+    <script th:src="@{/js/app.js}" src="/js/app.js"></script>
+</body>
+</html>

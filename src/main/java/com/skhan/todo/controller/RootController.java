@@ -17,6 +17,7 @@ public class RootController {
     public ResponseEntity<ApiStatusResponse> getApiStatus() {
         Map<String, String> endpoints = new LinkedHashMap<>();
         endpoints.put("ui", "GET /");
+        endpoints.put("about", "GET /about");
         endpoints.put("status", "GET /api");
         endpoints.put("getAllTodos", "GET /api/todos");
         endpoints.put("searchTodos", "GET /api/todos/search?query={keyword}");

@@ -145,12 +145,12 @@
 
         if (isDark) {
             document.documentElement.classList.add('dark');
-            elements.sunIcon.classList.remove('hidden');
-            elements.moonIcon.classList.add('hidden');
+            if (elements.sunIcon) elements.sunIcon.classList.remove('hidden');
+            if (elements.moonIcon) elements.moonIcon.classList.add('hidden');
         } else {
             document.documentElement.classList.remove('dark');
-            elements.moonIcon.classList.remove('hidden');
-            elements.sunIcon.classList.add('hidden');
+            if (elements.moonIcon) elements.moonIcon.classList.remove('hidden');
+            if (elements.sunIcon) elements.sunIcon.classList.add('hidden');
         }
     }
 
@@ -158,11 +158,11 @@
         const isDark = document.documentElement.classList.toggle('dark');
         localStorage.setItem('taskflow_theme', isDark ? 'dark' : 'light');
         if (isDark) {
-            elements.sunIcon.classList.remove('hidden');
-            elements.moonIcon.classList.add('hidden');
+            if (elements.sunIcon) elements.sunIcon.classList.remove('hidden');
+            if (elements.moonIcon) elements.moonIcon.classList.add('hidden');
         } else {
-            elements.moonIcon.classList.remove('hidden');
-            elements.sunIcon.classList.add('hidden');
+            if (elements.moonIcon) elements.moonIcon.classList.remove('hidden');
+            if (elements.sunIcon) elements.sunIcon.classList.add('hidden');
         }
     }
 
@@ -518,146 +518,185 @@
     // --- Event Listeners Setup ---
     function setupEventListeners() {
         // Theme Toggle
-        elements.themeToggleBtn.addEventListener('click', toggleTheme);
+        if (elements.themeToggleBtn) {
+            elements.themeToggleBtn.addEventListener('click', toggleTheme);
+        }
 
         // Quick Add Form
-        elements.quickAddForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const title = elements.quickTitle.value;
-            const desc = elements.quickDescription.value;
-            const created = await handleCreate(title, desc, false);
-            if (created) {
-                elements.quickTitle.value = '';
-                elements.quickDescription.value = '';
-                elements.quickDescriptionContainer.classList.add('hidden');
-                elements.quickTitle.focus();
-            }
-        });
+        if (elements.quickAddForm) {
+            elements.quickAddForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const title = elements.quickTitle.value;
+                const desc = elements.quickDescription.value;
+                const created = await handleCreate(title, desc, false);
+                if (created) {
+                    elements.quickTitle.value = '';
+                    elements.quickDescription.value = '';
+                    if (elements.quickDescriptionContainer) {
+                        elements.quickDescriptionContainer.classList.add('hidden');
+                    }
+                    elements.quickTitle.focus();
+                }
+            });
+        }
 
         // Toggle Details inside Quick Add
-        elements.toggleDescriptionBtn.addEventListener('click', () => {
-            elements.quickDescriptionContainer.classList.toggle('hidden');
-            if (!elements.quickDescriptionContainer.classList.contains('hidden')) {
-                elements.quickDescription.focus();
-            }
-        });
+        if (elements.toggleDescriptionBtn && elements.quickDescriptionContainer) {
+            elements.toggleDescriptionBtn.addEventListener('click', () => {
+                elements.quickDescriptionContainer.classList.toggle('hidden');
+                if (!elements.quickDescriptionContainer.classList.contains('hidden') && elements.quickDescription) {
+                    elements.quickDescription.focus();
+                }
+            });
+        }
 
         // Search Input
-        let debounceTimer;
-        elements.searchInput.addEventListener('input', (e) => {
-            clearTimeout(debounceTimer);
-            const val = e.target.value;
-            elements.clearSearchBtn.classList.toggle('hidden', !val);
-            debounceTimer = setTimeout(() => {
-                state.searchQuery = val;
-                renderUI();
-            }, 180);
-        });
+        if (elements.searchInput) {
+            let debounceTimer;
+            elements.searchInput.addEventListener('input', (e) => {
+                clearTimeout(debounceTimer);
+                const val = e.target.value;
+                if (elements.clearSearchBtn) {
+                    elements.clearSearchBtn.classList.toggle('hidden', !val);
+                }
+                debounceTimer = setTimeout(() => {
+                    state.searchQuery = val;
+                    renderUI();
+                }, 180);
+            });
+        }
 
-        elements.clearSearchBtn.addEventListener('click', () => {
-            elements.searchInput.value = '';
-            elements.clearSearchBtn.classList.add('hidden');
-            state.searchQuery = '';
-            renderUI();
-            elements.searchInput.focus();
-        });
+        if (elements.clearSearchBtn && elements.searchInput) {
+            elements.clearSearchBtn.addEventListener('click', () => {
+                elements.searchInput.value = '';
+                elements.clearSearchBtn.classList.add('hidden');
+                state.searchQuery = '';
+                renderUI();
+                elements.searchInput.focus();
+            });
+        }
 
         // Filter Tabs
-        elements.filterTabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                elements.filterTabs.forEach(t => {
-                    t.classList.remove('text-brand-700', 'dark:text-brand-300', 'bg-white', 'dark:bg-slate-900', 'shadow-sm', 'font-semibold');
-                    t.classList.add('text-slate-600', 'dark:text-slate-400', 'font-medium');
-                    t.setAttribute('aria-selected', 'false');
-                });
-                tab.classList.remove('text-slate-600', 'dark:text-slate-400', 'font-medium');
-                tab.classList.add('text-brand-700', 'dark:text-brand-300', 'bg-white', 'dark:bg-slate-900', 'shadow-sm', 'font-semibold');
-                tab.setAttribute('aria-selected', 'true');
+        if (elements.filterTabs && elements.filterTabs.length > 0) {
+            elements.filterTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    elements.filterTabs.forEach(t => {
+                        t.classList.remove('text-brand-700', 'dark:text-brand-300', 'bg-white', 'dark:bg-slate-900', 'shadow-sm', 'font-semibold');
+                        t.classList.add('text-slate-600', 'dark:text-slate-400', 'font-medium');
+                        t.setAttribute('aria-selected', 'false');
+                    });
+                    tab.classList.remove('text-slate-600', 'dark:text-slate-400', 'font-medium');
+                    tab.classList.add('text-brand-700', 'dark:text-brand-300', 'bg-white', 'dark:bg-slate-900', 'shadow-sm', 'font-semibold');
+                    tab.setAttribute('aria-selected', 'true');
 
-                state.currentFilter = tab.getAttribute('data-filter') || 'all';
-                renderUI();
+                    state.currentFilter = tab.getAttribute('data-filter') || 'all';
+                    renderUI();
+                });
             });
-        });
+        }
 
         // Todo List Item Click Delegation
-        elements.todoListContainer.addEventListener('click', (e) => {
-            const toggleBtn = e.target.closest('[data-action="toggle"]');
-            if (toggleBtn) {
-                const id = Number(toggleBtn.getAttribute('data-id'));
-                handleToggle(id);
-                return;
-            }
+        if (elements.todoListContainer) {
+            elements.todoListContainer.addEventListener('click', (e) => {
+                const toggleBtn = e.target.closest('[data-action="toggle"]');
+                if (toggleBtn) {
+                    const id = Number(toggleBtn.getAttribute('data-id'));
+                    handleToggle(id);
+                    return;
+                }
 
-            const editBtn = e.target.closest('[data-action="edit"]');
-            if (editBtn) {
-                const id = Number(editBtn.getAttribute('data-id'));
-                const todo = state.todos.find(t => t.id === id);
-                if (todo) openModal('edit', todo);
-                return;
-            }
+                const editBtn = e.target.closest('[data-action="edit"]');
+                if (editBtn) {
+                    const id = Number(editBtn.getAttribute('data-id'));
+                    const todo = state.todos.find(t => t.id === id);
+                    if (todo) openModal('edit', todo);
+                    return;
+                }
 
-            const deleteBtn = e.target.closest('[data-action="delete"]');
-            if (deleteBtn) {
-                const id = Number(deleteBtn.getAttribute('data-id'));
-                const todo = state.todos.find(t => t.id === id);
-                openDeleteModal('single', id, todo ? todo.title : '');
-                return;
-            }
-        });
+                const deleteBtn = e.target.closest('[data-action="delete"]');
+                if (deleteBtn) {
+                    const id = Number(deleteBtn.getAttribute('data-id'));
+                    const todo = state.todos.find(t => t.id === id);
+                    openDeleteModal('single', id, todo ? todo.title : '');
+                    return;
+                }
+            });
+        }
 
         // Modal Form Submit
-        elements.taskForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const id = elements.modalTaskId.value ? Number(elements.modalTaskId.value) : null;
-            const title = elements.modalTitleInput.value;
-            const desc = elements.modalDescriptionInput.value;
-            const completed = elements.modalCompletedInput.checked;
+        if (elements.taskForm) {
+            elements.taskForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const id = elements.modalTaskId.value ? Number(elements.modalTaskId.value) : null;
+                const title = elements.modalTitleInput.value;
+                const desc = elements.modalDescriptionInput.value;
+                const completed = elements.modalCompletedInput.checked;
 
-            if (id) {
-                await handleUpdate(id, title, desc, completed);
-            } else {
-                await handleCreate(title, desc, false);
-            }
-            closeModal();
-        });
+                if (id) {
+                    await handleUpdate(id, title, desc, completed);
+                } else {
+                    await handleCreate(title, desc, false);
+                }
+                closeModal();
+            });
+        }
 
         // Modal Triggers
-        elements.openCreateModalBtn.addEventListener('click', () => openModal('create'));
-        elements.emptyStateAddBtn.addEventListener('click', () => openModal('create'));
-        elements.closeModalBtn.addEventListener('click', closeModal);
-        elements.cancelModalBtn.addEventListener('click', closeModal);
+        if (elements.openCreateModalBtn) {
+            elements.openCreateModalBtn.addEventListener('click', () => openModal('create'));
+        }
+        if (elements.emptyStateAddBtn) {
+            elements.emptyStateAddBtn.addEventListener('click', () => openModal('create'));
+        }
+        if (elements.closeModalBtn) {
+            elements.closeModalBtn.addEventListener('click', closeModal);
+        }
+        if (elements.cancelModalBtn) {
+            elements.cancelModalBtn.addEventListener('click', closeModal);
+        }
 
         // Close on Backdrop Click
-        elements.taskModal.addEventListener('click', (e) => {
-            if (e.target === elements.taskModal) closeModal();
-        });
+        if (elements.taskModal) {
+            elements.taskModal.addEventListener('click', (e) => {
+                if (e.target === elements.taskModal) closeModal();
+            });
+        }
 
         // Delete Modal Triggers
-        elements.clearAllBtn.addEventListener('click', () => openDeleteModal('all'));
-        elements.cancelDeleteBtn.addEventListener('click', closeDeleteModal);
-        elements.confirmDeleteBtn.addEventListener('click', async () => {
-            if (state.pendingDelete) {
-                if (state.pendingDelete.type === 'all') {
-                    await handleDeleteAll();
-                } else if (state.pendingDelete.type === 'single' && state.pendingDelete.id) {
-                    await handleDelete(state.pendingDelete.id);
+        if (elements.clearAllBtn) {
+            elements.clearAllBtn.addEventListener('click', () => openDeleteModal('all'));
+        }
+        if (elements.cancelDeleteBtn) {
+            elements.cancelDeleteBtn.addEventListener('click', closeDeleteModal);
+        }
+        if (elements.confirmDeleteBtn) {
+            elements.confirmDeleteBtn.addEventListener('click', async () => {
+                if (state.pendingDelete) {
+                    if (state.pendingDelete.type === 'all') {
+                        await handleDeleteAll();
+                    } else if (state.pendingDelete.type === 'single' && state.pendingDelete.id) {
+                        await handleDelete(state.pendingDelete.id);
+                    }
                 }
-            }
-            closeDeleteModal();
-        });
+                closeDeleteModal();
+            });
+        }
 
-        elements.deleteModal.addEventListener('click', (e) => {
-            if (e.target === elements.deleteModal) closeDeleteModal();
-        });
+        if (elements.deleteModal) {
+            elements.deleteModal.addEventListener('click', (e) => {
+                if (e.target === elements.deleteModal) closeDeleteModal();
+            });
+        }
 
         // Keyboard Shortcuts
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
-                if (!elements.taskModal.classList.contains('hidden')) closeModal();
-                if (!elements.deleteModal.classList.contains('hidden')) closeDeleteModal();
+                if (elements.taskModal && !elements.taskModal.classList.contains('hidden')) closeModal();
+                if (elements.deleteModal && !elements.deleteModal.classList.contains('hidden')) closeDeleteModal();
             }
 
             if ((e.key === '/' || ((e.metaKey || e.ctrlKey) && e.key === 'k')) &&
+                elements.searchInput &&
                 document.activeElement !== elements.searchInput &&
                 document.activeElement !== elements.quickTitle &&
                 document.activeElement !== elements.quickDescription &&
@@ -674,7 +713,9 @@
     async function init() {
         initTheme();
         setupEventListeners();
-        await loadTodos();
+        if (elements.todoListContainer) {
+            await loadTodos();
+        }
     }
 
     // Run on DOM Ready

@@ -83,7 +83,26 @@ pipeline {
           
        }
     }
-    stage("EC2 Deploy"){
+
+   stage("EC2 Deploy- staging server"){
+    steps{
+        
+        sh '''
+          echo "Deployed to staging server"
+          '''
+
+    }
+   }
+   
+   stage("Production Approval :"){
+    steps{
+        
+        input message: 'Deploy to production?'
+          
+    }
+   }
+
+    stage("EC2 Deploy- production server"){
       steps{
 
          sshagent([
