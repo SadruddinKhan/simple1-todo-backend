@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Features - TaskFlow</title>
+    <meta name="description" content="Explore the powerful features and capabilities of TaskFlow - modern task management built with Spring Boot, Thymeleaf, and Tailwind CSS.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS v3 Play CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'monospace']
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            200: '#c7d2fe',
+                            300: '#a5b4fc',
+                            400: '#818cf8',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            800: '#3730a3',
+                            900: '#312e81'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Custom Styles -->
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 min-h-screen font-sans transition-colors duration-200 antialiased selection:bg-brand-500 selection:text-white">
+
+    <div class="min-h-screen flex flex-col">
+        <!-- Top Navigation Bar -->
+        <header class="sticky top-0 z-30 backdrop-blur-md bg-white/80 dark:bg-slate-900/80 border-b border-slate-200/80 dark:border-slate-800/80">
+            <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+                <div class="flex items-center gap-3 sm:gap-6">
+                    <a th:href="@{/}" href="/" class="flex items-center gap-3 group">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-400 flex items-center justify-center text-white shadow-md shadow-brand-500/20 group-hover:scale-105 transition-transform">
+                            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <h1 class="text-lg font-bold tracking-tight text-slate-900 dark:text-white">TaskFlow</h1>
+                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-brand-50 text-brand-700 dark:bg-brand-950/70 dark:text-brand-300 border border-brand-200 dark:border-brand-800/50">
+                                    v1.0
+                                </span>
+                            </div>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 hidden sm:block">Spring Boot • Thymeleaf • Tailwind</p>
+                        </div>
+                    </a>
+
+                    <!-- Navigation Links -->
+                    <nav class="flex items-center gap-1" aria-label="Main Navigation">
+                        <a th:href="@{/}" href="/" class="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+                            Tasks
+                        </a>
+                        <a th:href="@{/features}" href="/features" class="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold text-brand-700 dark:text-brand-300 bg-brand-50 dark:bg-brand-950/70 border border-brand-200 dark:border-brand-800/60 transition">
+                            Features
+                        </a>
+                        <a th:href="@{/about}" href="/about" class="px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+                            About
+                        </a>
+                    </nav>
+                </div>
+
+                <div class="flex items-center gap-2 sm:gap-3">
+                    <!-- API Status Badge -->
+                    <a th:href="@{/api}" href="/api" target="_blank" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                        <span>API Status</span>
+                    </a>
+
+                    <!-- Theme Toggle -->
+                    <button id="themeToggleBtn" type="button" aria-label="Toggle Theme" class="p-2 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white transition">
+                        <svg id="sunIcon" class="w-5 h-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+                        </svg>
+                        <svg id="moonIcon" class="w-5 h-5 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
+                        </svg>
+                    </button>
+
+                    <!-- Primary Go To Tasks Button -->
+                    <a th:href="@{/}" href="/" class="inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold text-white bg-brand-600 hover:bg-brand-700 active:scale-95 shadow-md shadow-brand-500/25 transition-all">
+                        <span>Go to Tasks</span>
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-12">
+
+            <!-- Hero Section -->
+            <section class="relative overflow-hidden rounded-3xl bg-gradient-to-b from-brand-50/70 via-white to-white dark:from-brand-950/30 dark:via-slate-900 dark:to-slate-900 border border-slate-200/80 dark:border-slate-800/80 p-6 sm:p-10 lg:p-12 shadow-sm text-center">
+                <!-- Background decorative glow -->
+                <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-96 h-96 bg-brand-400/20 dark:bg-brand-600/10 rounded-full blur-3xl pointer-events-none"></div>
+
+                <div class="relative z-10 max-w-3xl mx-auto space-y-5">
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-brand-100/80 text-brand-800 dark:bg-brand-900/60 dark:text-brand-300 border border-brand-200/80 dark:border-brand-800/60 shadow-sm">
+                        <span class="w-2 h-2 rounded-full bg-brand-600 dark:bg-brand-400 animate-ping"></span>
+                        <span>Feature Showcase &bull; Platform Capabilities</span>
+                    </div>
+
+                    <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight">
+                        Engineered for <span class="bg-gradient-to-r from-brand-600 via-indigo-500 to-purple-600 bg-clip-text text-transparent">Power, Speed &amp; Precision</span>
+                    </h1>
+
+                    <p class="text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed">
+                        Discover the rich toolset and architectural innovations that empower TaskFlow to deliver an instantaneous, accessible, and resilient task management experience.
+                    </p>
+
+                    <div class="pt-2 flex flex-wrap items-center justify-center gap-3">
+                        <a th:href="@{/}" href="/" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white bg-brand-600 hover:bg-brand-700 shadow-md shadow-brand-500/25 active:scale-95 transition">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span>Try Interactive Dashboard</span>
+                        </a>
+
+                        <a th:href="@{/about}" href="/about" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 shadow-sm transition">
+                            <svg class="w-4 h-4 text-brand-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+                            </svg>
+                            <span>About Architecture</span>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Live Status & Metric Strip -->
+            <section class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+                <div class="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-sm">
+                    <div class="flex items-center justify-between text-slate-500 dark:text-slate-400">
+                        <span class="text-xs font-semibold uppercase tracking-wider">Total Tasks</span>
+                        <div class="p-1.5 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 text-brand-600 dark:text-brand-400">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="mt-2 flex items-baseline gap-2">
+                        <span th:text="${totalCount}" class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">5</span>
+                        <span class="text-xs text-slate-500 dark:text-slate-400">items loaded</span>
+                    </div>
+                </div>
+
+                <div class="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-sm">
+                    <div class="flex items-center justify-between text-slate-500 dark:text-slate-400">
+                        <span class="text-xs font-semibold uppercase tracking-wider">Completed</span>
+                        <div class="p-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="mt-2 flex items-baseline gap-2">
+                        <span th:text="${completedCount}" class="text-2xl sm:text-3xl font-extrabold text-emerald-600 dark:text-emerald-400">2</span>
+                        <span class="text-xs text-emerald-600/70 dark:text-emerald-400/70">completed</span>
+                    </div>
+                </div>
+
+                <div class="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-sm">
+                    <div class="flex items-center justify-between text-slate-500 dark:text-slate-400">
+                        <span class="text-xs font-semibold uppercase tracking-wider">Pending</span>
+                        <div class="p-1.5 rounded-lg bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="mt-2 flex items-baseline gap-2">
+                        <span th:text="${pendingCount}" class="text-2xl sm:text-3xl font-extrabold text-amber-600 dark:text-amber-400">3</span>
+                        <span class="text-xs text-amber-600/70 dark:text-amber-400/70">active</span>
+                    </div>
+                </div>
+
+                <div class="p-4 sm:p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-sm">
+                    <div class="flex items-center justify-between text-slate-500 dark:text-slate-400">
+                        <span class="text-xs font-semibold uppercase tracking-wider">Live Rate</span>
+                        <span th:text="${progressPercent + '%'}" class="text-xs font-bold text-brand-600 dark:text-brand-400">40%</span>
+                    </div>
+                    <div class="mt-3">
+                        <div class="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2.5 overflow-hidden">
+                            <div th:style="'width: ' + ${progressPercent} + '%;'" class="bg-gradient-to-r from-brand-500 to-emerald-400 h-full rounded-full transition-all duration-500 ease-out" style="width: 40%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 6 Key Features In-Depth Showcase Grid -->
+            <section class="space-y-8">
+                <div class="text-center max-w-2xl mx-auto space-y-2">
+                    <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900 dark:text-white">Highlighted Platform Features</h2>
+                    <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">Every feature is designed with ergonomic workflows and high reliability in mind.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                    <!-- Feature 1: Instant Quick-Add & Operations -->
+                    <div class="group bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-7 border border-slate-200/80 dark:border-slate-800/80 shadow-sm hover:shadow-xl hover:border-indigo-400 dark:hover:border-indigo-600 transition-all flex flex-col justify-between space-y-6">
+                        <div class="space-y-4">
+                            <!-- Icon & Category -->
+                            <div class="flex items-center justify-between">
+                                <div class="w-12 h-12 rounded-2xl bg-indigo-50 dark:bg-indigo-950/80 text-brand-600 dark:text-brand-400 flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform">
+                                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+                                    </svg>
+                                </div>
+                                <span class="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-indigo-50 text-indigo-700 dark:bg-indigo-950/60 dark:text-indigo-300 border border-indigo-200/80 dark:border-indigo-800/60">
+                                    Productivity
+                                </span>
+                            </div>
+
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
+                                Instant Quick-Add Engine
+                            </h3>
+
+                            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                                Create tasks in a split second using the top inline input bar or launch the modal dialog for rich descriptions. Fast keyboard submit with <kbd class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-[11px] font-mono border border-slate-300 dark:border-slate-700">Enter</kbd>.
+                            </p>
+
+                            <!-- Feature Tags -->
+                            <div class="flex flex-wrap gap-1.5 pt-1">
+                                <span class="px-2 py-0.5 rounded-md text-[11px] font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">&bull; Inline Quick-Add</span>
+                                <span class="px-2 py-0.5 rounded-md text-[11px] font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">&bull; Expandable Details</span>
+                                <span class="px-2 py-0.5 rounded-md text-[11px] font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">&bull; Modal Editor</span>
+                            </div>
+                        </div>
+
+                        <!-- Mini Visual Preview -->
+                        <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60 text-xs flex items-center justify-between text-slate-500 dark:text-slate-400">
+                            <span class="font-mono text-[11px]">Task creation latency:</span>
+                            <span class="font-semibold text-emerald-600 dark:text-emerald-400">&lt; 3ms</span>
+                        </div>
+                    </div>
+
+                    <!-- Feature 2: Real-time Live Search & Filter -->
+                    <div class="group bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-7 border border-slate-200/80 dark:border-slate-800/80 shadow-sm hover:shadow-xl hover:border-sky-400 dark:hover:border-sky-600 transition-all flex flex-col justify-between space-y-6">
+                        <div class="space-y-4">
+                            <!-- Icon & Category -->
+                            <div class="flex items-center justify-between">
+                                <div class="w-12 h-12 rounded-2xl bg-sky-50 dark:bg-sky-950/80 text-sky-600 dark:text-sky-400 flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform">
+                                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                                    </svg>
+                                </div>
+                                <span class="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-sky-50 text-sky-700 dark:bg-sky-950/60 dark:text-sky-300 border border-sky-200/80 dark:border-sky-800/60">
+                                    Discovery
+                                </span>
+                            </div>
+
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors">
+                                Real-Time Debounced Search
+                            </h3>
+
+                            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                                Instantly filter across task titles and descriptions. Equipped with 180ms debounced queries, one-click clear button, and global keyboard shortcut <kbd class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-[11px] font-mono border border-slate-300 dark:border-slate-700">/</kbd>.
+                            </p>
+
+                            <!-- Feature Tags -->
+                            <div class="flex flex-wrap gap-1.5 pt-1">
+                                <span class="px-2 py-0.5 rounded-md text-[11px] font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">&bull; Global '/' Shortcut</span>
+                                <span class="px-2 py-0.5 rounded-md text-[11px] font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">&bull; Status Filter Tabs</span>
+                                <span class="px-2 py-0.5 rounded-md text-[11px] font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">&bull; Instant Result Reset</span>
+                            </div>
+                        </div>
+
+                        <!-- Mini Visual Preview -->
+                        <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60 text-xs flex items-center justify-between text-slate-500 dark:text-slate-400">
+                            <span class="font-mono text-[11px]">Search latency:</span>
+                            <span class="font-semibold text-sky-600 dark:text-sky-400">Instant (0ms)</span>
+                        </div>
+                    </div>
+
+                    <!-- Feature 3: Live Progress & Analytics -->
+                    <div class="group bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-7 border border-slate-200/80 dark:border-slate-800/80 shadow-sm hover:shadow-xl hover:border-emerald-400 dark:hover:border-emerald-600 transition-all flex flex-col justify-between space-y-6">
+                        <div class="space-y-4">
+                            <!-- Icon & Category -->
+                            <div class="flex items-center justify-between">
+                                <div class="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform">
+                                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5M9 11.25v1.5M12 9v3.75m3-6v6" />
+                                    </svg>
+                                </div>
+                                <span class="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-200/80 dark:border-emerald-800/60">
+                                    Analytics
+                                </span>
+                            </div>
+
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                                Live Progress Tracking
+                            </h3>
+
+                            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                                Stay motivated with real-time progress calculations. Dynamic animated gradient progress bar updates smoothly with every toggle, addition, or removal.
+                            </p>
+
+                            <!-- Feature Tags -->
+                            <div class="flex flex-wrap gap-1.5 pt-1">
+                                <span class="px-2 py-0.5 rounded-md text-[11px] font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">&bull; Smooth Progress Animations</span>
+                                <span class="px-2 py-0.5 rounded-md text-[11px] font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">&bull; Live Count Badges</span>
+                                <span class="px-2 py-0.5 rounded-md text-[11px] font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">&bull; Real-time Aggregation</span>
+                            </div>
+                        </div>
+
+                        <!-- Mini Visual Preview -->
+                        <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60 text-xs flex items-center justify-between text-slate-500 dark:text-slate-400">
+                            <span class="font-mono text-[11px]">Live Metric Sync:</span>
+                            <span class="font-semibold text-emerald-600 dark:text-emerald-400">Synchronous</span>
+                        </div>
+                    </div>
+
+                    <!-- Feature 4: Theme Toggle & Accessibility -->
+                    <div class="group bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-7 border border-slate-200/80 dark:border-slate-800/80 shadow-sm hover:shadow-xl hover:border-purple-400 dark:hover:border-purple-600 transition-all flex flex-col justify-between space-y-6">
+                        <div class="space-y-4">
+                            <!-- Icon & Category -->
+                            <div class="flex items-center justify-between">
+                                <div class="w-12 h-12 rounded-2xl bg-purple-50 dark:bg-purple-950/80 text-purple-600 dark:text-purple-400 flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform">
+                                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
+                                    </svg>
+                                </div>
+                                <span class="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-purple-50 text-purple-700 dark:bg-purple-950/60 dark:text-purple-300 border border-purple-200/80 dark:border-purple-800/60">
+                                    Design System
+                                </span>
+                            </div>
+
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">
+                                Adaptive Dark &amp; Light Themes
+                            </h3>
+
+                            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                                Elegantly crafted glassmorphism design system. Seamlessly adjusts to your preferred color scheme with localStorage persistence and fluid UI color transitions.
+                            </p>
+
+                            <!-- Feature Tags -->
+                            <div class="flex flex-wrap gap-1.5 pt-1">
+                                <span class="px-2 py-0.5 rounded-md text-[11px] font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">&bull; LocalStorage Sync</span>
+                                <span class="px-2 py-0.5 rounded-md text-[11px] font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">&bull; High Contrast Ratios</span>
+                                <span class="px-2 py-0.5 rounded-md text-[11px] font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">&bull; Zero Flash (FOUC)</span>
+                            </div>
+                        </div>
+
+                        <!-- Mini Visual Preview -->
+                        <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60 text-xs flex items-center justify-between text-slate-500 dark:text-slate-400">
+                            <span class="font-mono text-[11px]">Theme state:</span>
+                            <span class="font-semibold text-purple-600 dark:text-purple-400">Auto &amp; Manual</span>
+                        </div>
+                    </div>
+
+                    <!-- Feature 5: REST API & Jakarta Validation -->
+                    <div class="group bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-7 border border-slate-200/80 dark:border-slate-800/80 shadow-sm hover:shadow-xl hover:border-amber-400 dark:hover:border-amber-600 transition-all flex flex-col justify-between space-y-6">
+                        <div class="space-y-4">
+                            <!-- Icon & Category -->
+                            <div class="flex items-center justify-between">
+                                <div class="w-12 h-12 rounded-2xl bg-amber-50 dark:bg-amber-950/80 text-amber-600 dark:text-amber-400 flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform">
+                                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" />
+                                    </svg>
+                                </div>
+                                <span class="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-amber-50 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300 border border-amber-200/80 dark:border-amber-800/60">
+                                    Backend REST
+                                </span>
+                            </div>
+
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors">
+                                Robust REST API &amp; Validation
+                            </h3>
+
+                            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                                Complete RESTful interface adhering to HTTP standards. Includes request DTO validation with Jakarta constraints and structured error response payloads.
+                            </p>
+
+                            <!-- Feature Tags -->
+                            <div class="flex flex-wrap gap-1.5 pt-1">
+                                <span class="px-2 py-0.5 rounded-md text-[11px] font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">&bull; Spring MVC Controllers</span>
+                                <span class="px-2 py-0.5 rounded-md text-[11px] font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">&bull; @Valid Constraint Checks</span>
+                                <span class="px-2 py-0.5 rounded-md text-[11px] font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">&bull; Global Error Handler</span>
+                            </div>
+                        </div>
+
+                        <!-- Mini Visual Preview -->
+                        <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60 text-xs flex items-center justify-between text-slate-500 dark:text-slate-400">
+                            <span class="font-mono text-[11px]">API Status:</span>
+                            <span class="font-semibold text-emerald-600 dark:text-emerald-400">200 OK / 204</span>
+                        </div>
+                    </div>
+
+                    <!-- Feature 6: Concurrency & Thread Safety -->
+                    <div class="group bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-7 border border-slate-200/80 dark:border-slate-800/80 shadow-sm hover:shadow-xl hover:border-rose-400 dark:hover:border-rose-600 transition-all flex flex-col justify-between space-y-6">
+                        <div class="space-y-4">
+                            <!-- Icon & Category -->
+                            <div class="flex items-center justify-between">
+                                <div class="w-12 h-12 rounded-2xl bg-rose-50 dark:bg-rose-950/80 text-rose-600 dark:text-rose-400 flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform">
+                                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                                    </svg>
+                                </div>
+                                <span class="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-rose-50 text-rose-700 dark:bg-rose-950/60 dark:text-rose-300 border border-rose-200/80 dark:border-rose-800/60">
+                                    Core Engine
+                                </span>
+                            </div>
+
+                            <h3 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-rose-600 dark:group-hover:text-rose-400 transition-colors">
+                                Thread-Safe Concurrent Store
+                            </h3>
+
+                            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                                Built with Java Concurrent collections and Atomic counters. Handles concurrent read and write operations seamlessly with guaranteed consistency and ultra-low overhead.
+                            </p>
+
+                            <!-- Feature Tags -->
+                            <div class="flex flex-wrap gap-1.5 pt-1">
+                                <span class="px-2 py-0.5 rounded-md text-[11px] font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">&bull; ConcurrentHashMap</span>
+                                <span class="px-2 py-0.5 rounded-md text-[11px] font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">&bull; AtomicLong Sequencing</span>
+                                <span class="px-2 py-0.5 rounded-md text-[11px] font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">&bull; Zero Lock Contention</span>
+                            </div>
+                        </div>
+
+                        <!-- Mini Visual Preview -->
+                        <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-700/60 text-xs flex items-center justify-between text-slate-500 dark:text-slate-400">
+                            <span class="font-mono text-[11px]">Concurrency safety:</span>
+                            <span class="font-semibold text-emerald-600 dark:text-emerald-400">Thread-Safe</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Feature Comparison / Capability Matrix -->
+            <section class="bg-white dark:bg-slate-900 rounded-3xl p-6 sm:p-8 border border-slate-200/80 dark:border-slate-800/80 shadow-sm space-y-6">
+                <div class="text-center max-w-2xl mx-auto space-y-2">
+                    <h2 class="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Why Choose TaskFlow?</h2>
+                    <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">A side-by-side comparison of modern full-stack architecture versus standard basic todo apps.</p>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs sm:text-sm">
+                        <thead>
+                            <tr class="border-b border-slate-200 dark:border-slate-800 text-slate-400 uppercase tracking-wider text-[11px]">
+                                <th class="py-3 px-4">Capability / Feature</th>
+                                <th class="py-3 px-4 text-brand-600 dark:text-brand-400 font-bold">TaskFlow</th>
+                                <th class="py-3 px-4 text-slate-500">Standard To-Do App</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 dark:divide-slate-800/60">
+                            <tr>
+                                <td class="py-3.5 px-4 font-semibold text-slate-900 dark:text-white">Rendering Architecture</td>
+                                <td class="py-3.5 px-4 text-emerald-600 dark:text-emerald-400 font-medium">Hybrid SSR (Thymeleaf) + Async Client</td>
+                                <td class="py-3.5 px-4 text-slate-500 dark:text-slate-400">Client-Only or Full Page Reloads</td>
+                            </tr>
+                            <tr>
+                                <td class="py-3.5 px-4 font-semibold text-slate-900 dark:text-white">Backend Validation &amp; Error Contracts</td>
+                                <td class="py-3.5 px-4 text-emerald-600 dark:text-emerald-400 font-medium">Jakarta Bean Validation + Standardized JSON</td>
+                                <td class="py-3.5 px-4 text-slate-500 dark:text-slate-400">Minimal or Unstructured Errors</td>
+                            </tr>
+                            <tr>
+                                <td class="py-3.5 px-4 font-semibold text-slate-900 dark:text-white">Dark / Light Mode Support</td>
+                                <td class="py-3.5 px-4 text-emerald-600 dark:text-emerald-400 font-medium">Automatic OS Sync + LocalStorage Memory</td>
+                                <td class="py-3.5 px-4 text-slate-500 dark:text-slate-400">Static single theme</td>
+                            </tr>
+                            <tr>
+                                <td class="py-3.5 px-4 font-semibold text-slate-900 dark:text-white">Automated Testing Coverage</td>
+                                <td class="py-3.5 px-4 text-emerald-600 dark:text-emerald-400 font-medium">100% Passing MockMvc &amp; Service Tests</td>
+                                <td class="py-3.5 px-4 text-slate-500 dark:text-slate-400">Untested or Partial</td>
+                            </tr>
+                            <tr>
+                                <td class="py-3.5 px-4 font-semibold text-slate-900 dark:text-white">DevOps &amp; Containerization</td>
+                                <td class="py-3.5 px-4 text-emerald-600 dark:text-emerald-400 font-medium">Multi-Stage Docker &amp; Jenkins Pipeline</td>
+                                <td class="py-3.5 px-4 text-slate-500 dark:text-slate-400">Manual deployment</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Productivity & Keyboard Shortcuts Cheat Sheet -->
+            <section class="bg-gradient-to-tr from-slate-900 to-brand-950 text-white rounded-3xl p-6 sm:p-8 shadow-lg border border-slate-800 space-y-6">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-brand-500/20 text-brand-300 border border-brand-500/30">
+                            <span>⌨️ Power User Shortcuts</span>
+                        </div>
+                        <h2 class="text-xl sm:text-2xl font-bold tracking-tight text-white mt-2">Work at the Speed of Thought</h2>
+                    </div>
+                    <a th:href="@{/}" href="/" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold text-white bg-brand-600 hover:bg-brand-500 transition self-start sm:self-auto shadow-md">
+                        <span>Launch App</span>
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                        </svg>
+                    </a>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="p-4 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-between">
+                        <span class="text-xs sm:text-sm text-slate-300">Focus Search</span>
+                        <kbd class="px-2.5 py-1 rounded-lg bg-white/10 text-xs font-mono font-bold text-white border border-white/20">/</kbd>
+                    </div>
+
+                    <div class="p-4 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-between">
+                        <span class="text-xs sm:text-sm text-slate-300">Alternate Search</span>
+                        <kbd class="px-2.5 py-1 rounded-lg bg-white/10 text-xs font-mono font-bold text-white border border-white/20">Ctrl + K</kbd>
+                    </div>
+
+                    <div class="p-4 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-between">
+                        <span class="text-xs sm:text-sm text-slate-300">Submit Task</span>
+                        <kbd class="px-2.5 py-1 rounded-lg bg-white/10 text-xs font-mono font-bold text-white border border-white/20">Enter</kbd>
+                    </div>
+
+                    <div class="p-4 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-between">
+                        <span class="text-xs sm:text-sm text-slate-300">Close Modals</span>
+                        <kbd class="px-2.5 py-1 rounded-lg bg-white/10 text-xs font-mono font-bold text-white border border-white/20">Esc</kbd>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Call to Action Banner -->
+            <section class="relative rounded-3xl overflow-hidden bg-gradient-to-r from-brand-600 via-indigo-600 to-purple-600 p-8 sm:p-12 text-white text-center shadow-xl">
+                <div class="relative z-10 max-w-2xl mx-auto space-y-4">
+                    <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Ready to Boost Your Productivity?</h2>
+                    <p class="text-xs sm:text-sm text-brand-100 leading-relaxed">
+                        Join modern developers and teams using TaskFlow for clean, responsive, and robust task tracking.
+                    </p>
+                    <div class="pt-2 flex flex-wrap items-center justify-center gap-3">
+                        <a th:href="@{/}" href="/" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold bg-white text-brand-700 hover:bg-brand-50 shadow-md active:scale-95 transition">
+                            <span>Get Started with Tasks</span>
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="border-t border-slate-200/80 dark:border-slate-800/80 py-6 text-center text-xs text-slate-500 dark:text-slate-400">
+            <div class="max-w-5xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+                <p>TaskFlow &bull; Spring Boot 4 REST API &amp; Thymeleaf SSR</p>
+                <div class="flex items-center flex-wrap justify-center gap-4">
+                    <a th:href="@{/}" href="/" class="hover:text-brand-600 dark:hover:text-brand-400 transition font-medium">Tasks</a>
+                    <a th:href="@{/features}" href="/features" class="hover:text-brand-600 dark:hover:text-brand-400 transition font-medium">Features</a>
+                    <a th:href="@{/about}" href="/about" class="hover:text-brand-600 dark:hover:text-brand-400 transition font-medium">About</a>
+                    <a th:href="@{/api}" href="/api" target="_blank" class="hover:text-brand-600 dark:hover:text-brand-400 transition">REST Endpoints</a>
+                    <a th:href="@{/health}" href="/health" target="_blank" class="hover:text-brand-600 dark:hover:text-brand-400 transition">Health Check</a>
+                    <a th:href="@{/api/todos/stats}" href="/api/todos/stats" target="_blank" class="hover:text-brand-600 dark:hover:text-brand-400 transition">Stats JSON</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Plain JavaScript App Client for Theme & Interactivity -->
+    <script th:src="@{/js/app.js}" src="/js/app.js"></script>
+</body>
+</html>

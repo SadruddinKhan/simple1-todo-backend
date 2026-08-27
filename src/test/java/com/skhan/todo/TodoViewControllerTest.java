@@ -76,4 +76,21 @@ class TodoViewControllerTest {
                 .andExpect(model().attribute("version", is("1.0.0")))
                 .andExpect(model().attribute("springBootVersion", is("4.1.0")));
     }
+
+    @Test
+    void shouldReturnFeaturesViewWithModelAttributes() throws Exception {
+        mockMvc.perform(get("/features"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("features"))
+                .andExpect(model().attributeExists("totalCount"))
+                .andExpect(model().attributeExists("completedCount"))
+                .andExpect(model().attributeExists("pendingCount"))
+                .andExpect(model().attributeExists("progressPercent"))
+                .andExpect(model().attributeExists("version"))
+                .andExpect(model().attribute("totalCount", is(5L)))
+                .andExpect(model().attribute("completedCount", is(2L)))
+                .andExpect(model().attribute("pendingCount", is(3L)))
+                .andExpect(model().attribute("progressPercent", is(40)))
+                .andExpect(model().attribute("version", is("1.0.0")));
+    }
 }
